@@ -136,6 +136,14 @@ class _$TodoDao extends TodoDao {
   }
 
   @override
+  Future<Todo?> findTodoById(int id) async {
+    return _queryAdapter.query('Select * FROM Todo WHERE id = ?1',
+        mapper: (Map<String, Object?> row) =>
+            Todo(row['id'] as int, row['task'] as String),
+        arguments: [id]);
+  }
+
+  @override
   Future<void> insertTask(Todo todo) async {
     await _todoInsertionAdapter.insert(todo, OnConflictStrategy.abort);
   }

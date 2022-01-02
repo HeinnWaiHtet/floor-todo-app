@@ -1,15 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:todoapp/db/todo_dao.dart';
+import 'package:todoapp/db/todo_database.dart';
+
+import 'db/todo.dart';
 
 class EditScreen extends StatefulWidget {
-  const EditScreen({ Key? key }) : super(key: key);
+  int id;
+  EditScreen(this.id);
 
   @override
   _EditScreenState createState() => _EditScreenState();
 }
 
 class _EditScreenState extends State<EditScreen> {
+  late final database;
+  late TodoDao todoDao;
   final key = GlobalKey<FormState>();
-  TextEditingController controller = TextEditingController();
+  late TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    getConnection();
+  }
+
+  getConnection() async{
+    database = await $FloorTodoDatabase.databaseBuilder("todo_databse.db").build();
+    setState(() {
+      todoDao = database.todoDao;
+    });
+    Todo? todo = await todoDao.findTodoById(widget.id);
+    setState(() {
+      this.controller =  TextEditingController(text: todo!.task);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

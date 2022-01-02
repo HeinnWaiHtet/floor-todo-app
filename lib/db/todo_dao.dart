@@ -15,4 +15,7 @@ abstract class TodoDao{
 
   @Query("DELETE FROM Todo WHERE id=:id")
   Future<void> deleteById(int id);
+
+  @Query("SELECT * FROM Todo WHERE id=:id")
+  Future<Todo?> findTodoById(int id);
 }

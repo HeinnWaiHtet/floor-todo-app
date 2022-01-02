@@ -9,4 +9,7 @@ abstract class TodoDao{
 
   @Query("SELECT * FROM Todo")
   Stream<List<Todo>> findAllTodo();
+
+  @Query("SELECT * FROM Todo ORDER BY id DESC LIMIT 1")
+  Future<Todo?> findTodoLast();
 }

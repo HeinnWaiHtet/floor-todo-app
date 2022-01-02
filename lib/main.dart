@@ -42,11 +42,11 @@ class _MyHomeState extends State<MyHome> {
   late final database;
   late TodoDao todoDao;
   final key = GlobalKey<FormState>();
+  int lastId = 1;
   TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getConnection();
   }
@@ -55,6 +55,17 @@ class _MyHomeState extends State<MyHome> {
     database = await $FloorTodoDatabase.databaseBuilder("todo_databse.db").build();
     setState(() {
       todoDao = database.todoDao;
+    });
+  }
+
+  add(int id, String task){
+    this.todoDao.insertTask(Todo(id, task));
+  }
+
+  getLastId() async{
+    Todo? todo = await this.todoDao.findTodoLast();
+    setState(() {
+      this.lastId = todo!.id + 1;
     });
   }
 
@@ -79,7 +90,7 @@ class _MyHomeState extends State<MyHome> {
                 labelText: "Enter Task",
                 labelStyle: TextStyle(
                   color: Colors.deepOrange,
-                  fontSize: 28)
+                  fontSize: 21)
                 ),
               style: TextStyle(
                 fontSize: 18,
@@ -112,7 +123,9 @@ class _MyHomeState extends State<MyHome> {
               onPressed: () async{
                 if(key.currentState!.validate()){
                   String task = controller.text;
-                  this.todoDao.insertTask(Todo(1, task));
+                  await this.getLastId();
+                  this.add(this.lastId, task);
+                  controller.text = "";
                 }
               },
             ),
@@ -135,8 +148,8 @@ class _MyHomeState extends State<MyHome> {
                       child: Row(
                         children: [
                           Container(
-                            width: 200,
-                            height: 50,
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                             child: Text(
                             todo.task,
                             textAlign: TextAlign.center,
@@ -145,7 +158,21 @@ class _MyHomeState extends State<MyHome> {
                               color: Colors.orange
                               ),
                             ),
-                          )
+                          ),
+                          IconButton(
+                            onPressed: (){
+
+                            },
+                            icon: Icon(Icons.edit),
+                            color: Colors.red,
+                          ),
+                          IconButton(
+                            onPressed: (){
+
+                            },
+                            icon: Icon(Icons.delete),
+                            color: Colors.red,
+                          ),
                         ],
                     ),
                   );

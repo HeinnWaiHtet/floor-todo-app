@@ -123,6 +123,13 @@ class _$TodoDao extends TodoDao {
   }
 
   @override
+  Future<Todo?> findTodoLast() async {
+    return _queryAdapter.query('SELECT * FROM Todo ORDER BY id DESC LIMIT 1',
+        mapper: (Map<String, Object?> row) =>
+            Todo(row['id'] as int, row['task'] as String));
+  }
+
+  @override
   Future<void> insertTask(Todo todo) async {
     await _todoInsertionAdapter.insert(todo, OnConflictStrategy.abort);
   }

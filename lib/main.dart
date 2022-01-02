@@ -167,7 +167,7 @@ class _MyHomeState extends State<MyHome> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context){
-                                  return EditScreen();
+                                  return EditScreen(todo.id);
                                 })
                               );
                             },

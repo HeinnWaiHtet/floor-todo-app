@@ -1,6 +1,7 @@
 import 'package:floor/floor.dart';
 import 'package:todoapp/db/todo.dart';
 
+@dao
 abstract class TodoDao{
 
   @insert 

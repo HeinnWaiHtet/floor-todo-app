@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todoapp/db/todo_dao.dart';
+import 'package:todoapp/db/todo_database.dart';
+
+import 'db/todo.dart';
 
 void main() {
   runApp(const MyApp());
@@ -88,9 +92,13 @@ class _MyHomeState extends State<MyHome> {
                   fontSize: 21,
                   ),
                 ),
-              onPressed: (){
+              onPressed: () async{
                 if(key.currentState!.validate()){
                   String task = controller.text;
+                  final databse = await $FloorTodoDatabase.databaseBuilder("todo_databse.db").build();
+                  TodoDao todoDao = databse.todoDao;
+                  todoDao.insertTask(Todo(1, task));
+
                 }
               },
             ),

@@ -92,7 +92,10 @@ class _EditScreenState extends State<EditScreen> {
                 ),
               onPressed: () async{
                 if(key.currentState!.validate()){
-                  
+                  setState(() {
+                    this.todoDao.updateById(widget.id, controller.text);
+                  });
+                  Navigator.pop(context);
                 }
               },
             ),

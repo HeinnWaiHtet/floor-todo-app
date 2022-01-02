@@ -18,4 +18,10 @@ abstract class TodoDao{
 
   @Query("SELECT * FROM Todo WHERE id=:id")
   Future<Todo?> findTodoById(int id);
+
+  @Query("UPDATE Todo SET task=:task WHERE id=:id")
+  Future<void> updateById(int id, String task);
+
+  @Query("DELETE FROM Todo")
+  Future<void> deteteAllTask();
 }

@@ -137,10 +137,21 @@ class _$TodoDao extends TodoDao {
 
   @override
   Future<Todo?> findTodoById(int id) async {
-    return _queryAdapter.query('Select * FROM Todo WHERE id = ?1',
+    return _queryAdapter.query('SELECT * FROM Todo WHERE id=?1',
         mapper: (Map<String, Object?> row) =>
             Todo(row['id'] as int, row['task'] as String),
         arguments: [id]);
+  }
+
+  @override
+  Future<void> updateById(int id, String task) async {
+    await _queryAdapter.queryNoReturn('UPDATE Todo SET task=?2 WHERE id=?1',
+        arguments: [id, task]);
+  }
+
+  @override
+  Future<void> deteteAllTask() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM Todo');
   }
 
   @override

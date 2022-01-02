@@ -22,12 +22,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.red),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Todo App"),
-          ),
-        body: MyHome(),
-      ),
+      home: MyHome(),
     );
   }
 }
@@ -74,123 +69,136 @@ class _MyHomeState extends State<MyHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.remove),
+        onPressed: (){
+          setState(() {
+            this.todoDao.deteteAllTask();
+          });
+        },
+      ),
+      appBar: AppBar(
+          title: Text("Todo App"),
+        ),
+      body: Column(
       children: [
-        Form(
-          key: key,
-          child: Container(
-            padding: EdgeInsets.all(10),
-            child: TextFormField(
-              controller: controller,
-              validator: (value){
-                if(value == null || value.isEmpty){
-                  return "Task Must Enter";
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                hintText: "Enter your Task",
-                labelText: "Enter Task",
-                labelStyle: TextStyle(
-                  color: Colors.deepOrange,
-                  fontSize: 21)
-                ),
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black
-              ),
-              ),
-            ),
-          ),
-
-          Container(
-            margin: EdgeInsets.all(20),
-            width: MediaQuery.of(context).size.width,
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Colors.red,
-                primary: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10)
-                  )
-                )
-              ),
-              child: Text(
-                "Save",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 21,
+          Form(
+            key: key,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: TextFormField(
+                controller: controller,
+                validator: (value){
+                  if(value == null || value.isEmpty){
+                    return "Task Must Enter";
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  hintText: "Enter your Task",
+                  labelText: "Enter Task",
+                  labelStyle: TextStyle(
+                    color: Colors.deepOrange,
+                    fontSize: 21)
                   ),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black
                 ),
-              onPressed: () async{
-                if(key.currentState!.validate()){
-                  String task = controller.text;
-                  await this.getLastId();
-                  this.add(this.lastId, task);
-                  controller.text = "";
-                }
-              },
+                ),
+              ),
             ),
-          ),
 
-          Expanded(
-            child: StreamBuilder<List<Todo>>(
-              stream: this.todoDao.findAllTodo(),
-              builder: (context, AsyncSnapshot snapshot){
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context,index){
-                    Todo todo = snapshot.data[index];
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10)
-                          )
-                        ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                            child: Text(
-                            todo.task,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 21,
-                              color: Colors.orange
+            Container(
+              margin: EdgeInsets.all(20),
+              width: MediaQuery.of(context).size.width,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  primary: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10)
+                    )
+                  )
+                ),
+                child: Text(
+                  "Save",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 21,
+                    ),
+                  ),
+                onPressed: () async{
+                  if(key.currentState!.validate()){
+                    String task = controller.text;
+                    await this.getLastId();
+                    this.add(this.lastId, task);
+                    controller.text = "";
+                  }
+                },
+              ),
+            ),
+
+            Expanded(
+              child: StreamBuilder<List<Todo>>(
+                stream: this.todoDao.findAllTodo(),
+                builder: (context, AsyncSnapshot snapshot){
+                  return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context,index){
+                      Todo todo = snapshot.data[index];
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10)
+                            )
+                          ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                              child: Text(
+                              todo.task,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 21,
+                                color: Colors.orange
+                                ),
                               ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context){
-                                  return EditScreen(todo.id);
-                                })
-                              );
-                            },
-                            icon: Icon(Icons.edit),
-                            color: Colors.red,
-                          ),
-                          IconButton(
-                            onPressed: (){
-                              setState(() {
-                                this.todoDao.deleteById(todo.id);
-                              });
-                            },
-                            icon: Icon(Icons.delete),
-                            color: Colors.red,
-                          ),
-                        ],
-                    ),
-                  );
-                });
-              },
-            )
-          ),
-      ],
+                            IconButton(
+                              onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context){
+                                    return EditScreen(todo.id);
+                                  })
+                                );
+                              },
+                              icon: Icon(Icons.edit),
+                              color: Colors.red,
+                            ),
+                            IconButton(
+                              onPressed: (){
+                                setState(() {
+                                  this.todoDao.deleteById(todo.id);
+                                });
+                              },
+                              icon: Icon(Icons.delete),
+                              color: Colors.red,
+                            ),
+                          ],
+                      ),
+                    );
+                  });
+                },
+              )
+            ),
+        ],
+      ),
     );
   }
 }

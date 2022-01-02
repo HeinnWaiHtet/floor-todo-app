@@ -36,6 +36,7 @@ class MyHome extends StatefulWidget {
 
 class _MyHomeState extends State<MyHome> {
   final key = GlobalKey<FormState>();
+  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,13 +46,23 @@ class _MyHomeState extends State<MyHome> {
           child: Container(
             padding: EdgeInsets.all(10),
             child: TextFormField(
+              controller: controller,
+              validator: (value){
+                if(value == null || value.isEmpty){
+                  return "Task Must Enter";
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 hintText: "Enter your Task",
                 labelText: "Enter Task",
+                labelStyle: TextStyle(
+                  color: Colors.deepOrange,
+                  fontSize: 28)
                 ),
               style: TextStyle(
-                fontSize: 20,
-                color: Colors.indigo
+                fontSize: 18,
+                color: Colors.black
               ),
               ),
             ),
@@ -78,7 +89,9 @@ class _MyHomeState extends State<MyHome> {
                   ),
                 ),
               onPressed: (){
-
+                if(key.currentState!.validate()){
+                  String task = controller.text;
+                }
               },
             ),
           ),

@@ -12,4 +12,7 @@ abstract class TodoDao{
 
   @Query("SELECT * FROM Todo ORDER BY id DESC LIMIT 1")
   Future<Todo?> findTodoLast();
+
+  @Query("DELETE FROM Todo WHERE id=:id")
+  Future<void> deleteById(int id);
 }

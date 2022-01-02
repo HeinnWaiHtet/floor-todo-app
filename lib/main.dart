@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todoapp/db/todo_dao.dart';
 import 'package:todoapp/db/todo_database.dart';
+import 'package:todoapp/edit_screen.dart';
 
 import 'db/todo.dart';
 
@@ -163,7 +164,12 @@ class _MyHomeState extends State<MyHome> {
                           ),
                           IconButton(
                             onPressed: (){
-
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context){
+                                  return EditScreen();
+                                })
+                              );
                             },
                             icon: Icon(Icons.edit),
                             color: Colors.red,

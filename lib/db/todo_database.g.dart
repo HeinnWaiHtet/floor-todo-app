@@ -130,6 +130,12 @@ class _$TodoDao extends TodoDao {
   }
 
   @override
+  Future<void> deleteById(int id) async {
+    await _queryAdapter
+        .queryNoReturn('DELETE FROM Todo WHERE id=?1', arguments: [id]);
+  }
+
+  @override
   Future<void> insertTask(Todo todo) async {
     await _todoInsertionAdapter.insert(todo, OnConflictStrategy.abort);
   }

@@ -64,9 +64,11 @@ class _MyHomeState extends State<MyHome> {
 
   getLastId() async{
     Todo? todo = await this.todoDao.findTodoLast();
-    setState(() {
-      this.lastId = todo!.id + 1;
+    if(todo != null){
+      setState(() {
+      this.lastId = todo.id + 1;
     });
+    }
   }
 
   @override
@@ -168,7 +170,9 @@ class _MyHomeState extends State<MyHome> {
                           ),
                           IconButton(
                             onPressed: (){
-
+                              setState(() {
+                                this.todoDao.deleteById(todo.id);
+                              });
                             },
                             icon: Icon(Icons.delete),
                             color: Colors.red,
